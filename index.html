@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" defer></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js" defer></script>
     <title>Task List</title>
 </head>
+
 <body>
     <div class="desktop">
-
+        <div class="taskContainer">
+            <textarea id="taskContent" class="taskContent" cols="30" rows="10"></textarea>
+        </div>
+        <div class="addTask">Add task</div>
+        <div class="item"></div>
     </div>
-    <script type="module" src="node_modules/jquery/dist/jquery.js"></script>
-    <script type="module" src="js/index.js"></script>
+    <script src="node_modules/jquery/dist/jquery.js"></script>
+    <script src="js/index.js"></script>
 </body>
+
 </html>
