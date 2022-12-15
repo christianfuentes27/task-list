@@ -17,6 +17,7 @@ $( function() {
     // There's the gallery and the trash
     var $gallery = $( "#gallery" ),
       $trash = $( "#trash" );
+      $todo = $('#todo');
  
     // Let the gallery items be draggable
     $( "li", $gallery ).draggable({
@@ -37,7 +38,30 @@ $( function() {
         deleteImage( ui.draggable );
       }
     });
- 
+    
+    
+    $trash.droppable({
+      accept: "#gallery > li",
+      classes: {
+        "ui-droppable-active": "ui-state-highlight"
+      },
+      drop: function( event, ui ) {
+        deleteImage( ui.draggable );
+      }
+    });
+    
+    $trash.droppable({
+      accept: "#gallery > li",
+      classes: {
+        "ui-droppable-active": "ui-state-highlight"
+      },
+      drop: function( event, ui ) {
+        deleteImage( ui.draggable );
+      }
+    });
+    
+
+
     // Let the gallery be droppable as well, accepting items from the trash
     $gallery.droppable({
       accept: "#trash li",
