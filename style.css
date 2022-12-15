@@ -1,42 +1,55 @@
-html, body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
+#gallery {
+    float: left;
+    width: 65%;
+    min-height: 12em;
 }
 
-.desktop {
-    height: 100%;
+.gallery.custom-state-active {
+    background: #eee;
+}
+
+.gallery li {
+    float: left;
+    width: 96px;
+    padding: 0.4em;
+    margin: 0 0.4em 0.4em 0;
+    text-align: center;
+}
+
+.gallery li h5 {
+    margin: 0 0 0.4em;
+    cursor: move;
+}
+
+.gallery li a {
+    float: right;
+}
+
+.gallery li a.ui-icon-zoomin {
+    float: left;
+}
+
+.gallery li img {
     width: 100%;
-    background-color: antiquewhite;
-    box-sizing: border-box;
-    padding-top: 20px;
+    cursor: move;
 }
 
-.item {
-    width: 300px;
-    height: 300px;
-    margin: 20px;
-    background-color: rgb(255, 255, 141);
+#trash {
+    float: right;
+    width: 32%;
+    min-height: 18em;
+    padding: 1%;
 }
 
-.taskContent {
-    resize: none;
+#trash h4 {
+    line-height: 16px;
+    margin: 0 0 0.4em;
 }
 
-.taskContainer {
-    width: fit-content;
-    margin: auto;
+#trash h4 .ui-icon {
+    float: left;
 }
 
-.addTask {
-    width: 200px;
-    height: 60px;
-    background-color: black;
-    color: white;
-    text-transform: uppercase;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 20px auto;
-    cursor: pointer;
+#trash .gallery h5 {
+    display: none;
 }
