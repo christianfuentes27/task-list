@@ -34,22 +34,44 @@
     cursor: move;
 }
 
-#trash {
+#todolist {
     float: right;
     width: 32%;
     min-height: 18em;
     padding: 1%;
 }
 
-#trash h4 {
+#todolist h4 {
     line-height: 16px;
     margin: 0 0 0.4em;
 }
 
-#trash h4 .ui-icon {
+#todolist h4 .ui-icon {
     float: left;
 }
 
-#trash .gallery h5 {
+#todolist .gallery h5 {
     display: none;
+}
+
+.container-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.task-text {
+    resize: none;
+}
+
+.add-btn {
+    width: 150px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: lightblue;
+    cursor: pointer;
+    margin-top: 5px;
+    margin-bottom: 10px;
 }
