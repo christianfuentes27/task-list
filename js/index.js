@@ -3,17 +3,17 @@ $(function () {
   // init();
 
   var $gallery = $("#gallery"),
-    $todolist = $("#todolist"),
-    list = [];
+    $todolist = $("#todolist");
 
   $('.add-btn').on('click', (e) => {
     postData('http://localhost:3000/create', {
-      'id': 1,
-      'content': $('.task-text').val()
+      'id': '',
+      'content': $('.task-text').val(),
+      'location': 'gallery'
     })
     .then(data => {
       addTask(data.content); 
-      console.log(data.response);
+      console.log(data);
     });
   });
 
@@ -68,7 +68,6 @@ $(function () {
 
       $item.appendTo($list).fadeIn();
     });
-    list.push($item);
   }
 
   // Image recycle function
@@ -78,7 +77,6 @@ $(function () {
         .appendTo($gallery)
         .fadeIn();
     });
-    list.splice(list.indexOf($item), 1);
   }
 
   async function postData(url, data) {
@@ -93,4 +91,31 @@ $(function () {
     });
     return response.json(); // parses JSON response into native JavaScript objects
   }
+
+  async function getData(url) {
+    const response = await fetch(url, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    return response.json();
+  }
+
+  getData('http://localhost:3000/getTasks')
+  .then(tasks => {
+    tasks.forEach(task => {
+      let location = $gallery
+      if (task.location == "todolist") {
+        location = $todolist;
+      }
+      $(`<li class="ui-widget-content ui-corner-tr"><p>${task.content}</p></li>`).draggable({
+        cancel: "a.ui-icon", // clicking an icon won't initiate dragging
+        revert: "invalid", // when not dropped, the item will revert back to its initial position
+        containment: "document",
+        helper: "clone",
+        cursor: "move"
+      }).appendTo(location);
+    });
+  });
 });

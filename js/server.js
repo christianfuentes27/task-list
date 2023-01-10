@@ -1,15 +1,20 @@
+const { MongoClient } = require('mongodb');
 const express = require("express");
 const bodyParser = require('body-parser');
 const mongoose = require("mongoose");
 const path = require('path');
-
+const { v4: uuidv4 } = require("uuid");
 const app = express();
+const uri = "mongodb://mongoadmin:secret@localhost:1888/?authMechanism=DEFAULT";
+const client = new MongoClient(uri);
+
 mongoose.Promise = global.Promise;
-mongoose.connect("mongodb://mongoadmin:secret@localhost:1888/?authMechanism=DEFAULT");
+mongoose.connect(uri);
 
 var nameSchema = new mongoose.Schema({
     id: String,
-    content: String
+    content: String,
+    location: String
 });
 var Task = mongoose.model("Task", nameSchema);
 
@@ -24,24 +29,37 @@ app.listen(3000, () => {
     console.log("Server running on port 3000");
 });
 
-app.get('/', function(req, res) {
+app.get('/', function (req, res) {
     res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-app.post('/test', function (req, res) {
-    res.send({'res': req.body.answer + 10});
+app.get('/getTasks', function (req, res) {
+    getTasks().then(tasks => res.send(tasks));
+    // res.send(getTasks().catch(console.dir));
 });
 
 app.post('/create', function (req, res) {
     let data = new Task(req.body);
+    data.id = uuidv4();
     data.save()
         .then(item => {
-            res.send({
-                'content': req.body.content,
-                'response': 'task saved into database'
-            });
+            res.send(item);
         })
         .catch(err => {
             res.status(400).send("unable to save to database");
         });
 });
+
+async function getTasks() {
+    try {
+        await client.connect();
+        const db = client.db('test');
+        const collection = db.collection('tasks');
+        const cursor = collection.find();
+        let tasks = [];
+        await cursor.forEach(task => tasks.push(task));
+        return tasks;
+    } finally {
+        await client.close();
+    }
+}
