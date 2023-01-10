@@ -7,7 +7,18 @@ $(function () {
     list = [];
 
   $('.add-btn').on('click', (e) => {
-    $(`<li class="ui-widget-content ui-corner-tr"><p>${$('.task-text').val()}</p></li>`).draggable({
+    postData('http://localhost:3000/create', {
+      'id': 1,
+      'content': $('.task-text').val()
+    })
+    .then(data => {
+      addTask(data.content); 
+      console.log(data.response);
+    });
+  });
+
+  function addTask(data) {
+    $(`<li class="ui-widget-content ui-corner-tr"><p>${data}</p></li>`).draggable({
       cancel: "a.ui-icon", // clicking an icon won't initiate dragging
       revert: "invalid", // when not dropped, the item will revert back to its initial position
       containment: "document",
@@ -15,7 +26,7 @@ $(function () {
       cursor: "move"
     }).appendTo($('#gallery'));
     $('.task-text').val('');
-  });
+  }
 
   // Let the gallery items be draggable
   $("li", $gallery).draggable({
@@ -68,26 +79,18 @@ $(function () {
         .fadeIn();
     });
     list.splice(list.indexOf($item), 1);
-    sendMessage($item);
   }
 
-  function sendMessage($item) {
-    const msg = {
-      type: 'task',
-      content: $item[0].children[0].innerHTML,
-      list
-    }
-    // socket.send(JSON.stringify(msg));
-  }
-
-  function init() {
-    socket = new WebSocket(`ws://localhost:8023`);
-    socket.onopen = (e) => {
-      state = true;
-    };
-    socket.onmessage = (e) => {
-      let data = JSON.parse(e.data);
-      //Take array and display all tasks
-    }
+  async function postData(url, data) {
+    const response = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify(data) // body data type must match "Content-Type" header
+    });
+    return response.json(); // parses JSON response into native JavaScript objects
   }
 });

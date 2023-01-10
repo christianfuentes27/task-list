@@ -28,13 +28,20 @@ app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-// app.post('/test', function (req, res) {
-//     let data = new Task(req.body);
-//     data.save()
-//         .then(item => {
-//             res.send("item saved to database");
-//         })
-//         .catch(err => {
-//             res.status(400).send("unable to save to database");
-//         });
-// });
+app.post('/test', function (req, res) {
+    res.send({'res': req.body.answer + 10});
+});
+
+app.post('/create', function (req, res) {
+    let data = new Task(req.body);
+    data.save()
+        .then(item => {
+            res.send({
+                'content': req.body.content,
+                'response': 'task saved into database'
+            });
+        })
+        .catch(err => {
+            res.status(400).send("unable to save to database");
+        });
+});
