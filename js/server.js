@@ -34,8 +34,7 @@ app.get('/', function (req, res) {
 });
 
 app.get('/getTasks', function (req, res) {
-    getTasks().then(tasks => res.send(tasks));
-    // res.send(getTasks().catch(console.dir));
+    getTasks().then(tasks => res.send(tasks)).catch(console.dir);
 });
 
 app.post('/create', function (req, res) {
@@ -48,6 +47,24 @@ app.post('/create', function (req, res) {
         .catch(err => {
             res.status(400).send("unable to save to database");
         });
+});
+
+app.put('/update', async function (req, res) {
+    try {
+        await client.connect();
+        const db = client.db('test');
+        const collection = db.collection('tasks');
+        const filter = {id: req.body.id};
+        const updateDoc = {
+            $set: {
+                location: req.body.location
+            }
+        }
+        await collection.updateOne(filter, updateDoc);
+        res.send({'message': 'Task location updated correctly'});
+    } finally {
+        await client.close();
+    }
 });
 
 async function getTasks() {

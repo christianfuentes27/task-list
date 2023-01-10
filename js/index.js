@@ -1,7 +1,4 @@
 $(function () {
-  // There's the gallery and the trash
-  // init();
-
   var $gallery = $("#gallery"),
     $todolist = $("#todolist");
 
@@ -12,13 +9,13 @@ $(function () {
       'location': 'gallery'
     })
     .then(data => {
-      addTask(data.content); 
+      addTask(data); 
       console.log(data);
     });
   });
 
   function addTask(data) {
-    $(`<li class="ui-widget-content ui-corner-tr"><p>${data}</p></li>`).draggable({
+    $(`<li class="ui-widget-content ui-corner-tr" data-task="${data.id}"><p>${data.content}</p><br><i class="fa-solid fa-trash"></i></li>`).draggable({
       cancel: "a.ui-icon", // clicking an icon won't initiate dragging
       revert: "invalid", // when not dropped, the item will revert back to its initial position
       containment: "document",
@@ -45,6 +42,10 @@ $(function () {
     },
     drop: function (event, ui) {
       deleteTask(ui.draggable);
+      updateData('http://localhost:3000/update', {
+        id: ui.draggable[0].getAttribute('data-task'), 
+        location: 'todolist'
+      }).then(res => console.log(res.message));
     }
   });
 
@@ -56,6 +57,10 @@ $(function () {
     },
     drop: function (event, ui) {
       recycleTask(ui.draggable);
+      updateData('http://localhost:3000/update', {
+        id: ui.draggable[0].getAttribute('data-task'), 
+        location: 'gallery'
+      }).then(res => console.log(res.message));
     }
   });
 
@@ -77,6 +82,19 @@ $(function () {
         .appendTo($gallery)
         .fadeIn();
     });
+  }
+
+  // COMMUNICATION WITH SERVER AND MONGODB
+
+  async function updateData(url, data) {
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return response.json();
   }
 
   async function postData(url, data) {
@@ -109,7 +127,7 @@ $(function () {
       if (task.location == "todolist") {
         location = $todolist;
       }
-      $(`<li class="ui-widget-content ui-corner-tr"><p>${task.content}</p></li>`).draggable({
+      $(`<li class="ui-widget-content ui-corner-tr" data-task="${task.id}"><p>${task.content}</p><br><i class="fa-solid fa-trash"></li>`).draggable({
         cancel: "a.ui-icon", // clicking an icon won't initiate dragging
         revert: "invalid", // when not dropped, the item will revert back to its initial position
         containment: "document",

@@ -54,6 +54,25 @@
     display: none;
 }
 
+#todolist {
+    list-style-type: none;
+}
+
+#todolist li {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px 40px;
+    width: 110px;
+    position: relative;
+}
+
+#todolist i {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+}
+
 .container-list {
     display: flex;
     flex-wrap: wrap;
