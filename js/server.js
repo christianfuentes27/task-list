@@ -67,6 +67,19 @@ app.put('/update', async function (req, res) {
     }
 });
 
+app.delete('/delete', async function (req, res) {
+    try {
+        await client.connect();
+        const db = client.db('test');
+        const collection = db.collection('tasks');
+        const query = {id: req.body.id};
+        await collection.deleteOne(query);
+        res.send({'message': 'Task deleted correctly'});
+    } finally {
+        await client.close();
+    }
+});
+
 async function getTasks() {
     try {
         await client.connect();

@@ -15,7 +15,8 @@ $(function () {
   });
 
   function addTask(data) {
-    $(`<li class="ui-widget-content ui-corner-tr" data-task="${data.id}"><p>${data.content}</p><br><i class="fa-solid fa-trash"></i></li>`).draggable({
+    let li = $(`<li class="ui-widget-content ui-corner-tr" data-task="${data.id}"><p>${data.content}</p><br></li>`);
+    li.draggable({
       cancel: "a.ui-icon", // clicking an icon won't initiate dragging
       revert: "invalid", // when not dropped, the item will revert back to its initial position
       containment: "document",
@@ -23,6 +24,17 @@ $(function () {
       cursor: "move"
     }).appendTo($('#gallery'));
     $('.task-text').val('');
+    let trash = $('<i class="fa-solid fa-trash"></i>');
+    li.append(trash);
+    trash.on('click', (e) => {
+      removeData('http://localhost:3000/delete', {
+        id: e.target.parentElement.getAttribute('data-task')
+      })
+      .then(res => {
+        e.target.parentElement.remove();
+        console.log(res.message);
+      });
+    });
   }
 
   // Let the gallery items be draggable
@@ -86,6 +98,17 @@ $(function () {
 
   // COMMUNICATION WITH SERVER AND MONGODB
 
+  async function removeData(url, data) {
+    const response = await fetch(url, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(data)
+    });
+    return response.json();
+  }
+
   async function updateData(url, data) {
     const response = await fetch(url, {
       method: 'PUT',
@@ -127,13 +150,22 @@ $(function () {
       if (task.location == "todolist") {
         location = $todolist;
       }
-      $(`<li class="ui-widget-content ui-corner-tr" data-task="${task.id}"><p>${task.content}</p><br><i class="fa-solid fa-trash"></li>`).draggable({
+      $(`<li class="ui-widget-content ui-corner-tr" data-task="${task.id}"><p>${task.content}</p><br><i class="fa-solid fa-trash"></i></li>`).draggable({
         cancel: "a.ui-icon", // clicking an icon won't initiate dragging
         revert: "invalid", // when not dropped, the item will revert back to its initial position
         containment: "document",
         helper: "clone",
         cursor: "move"
       }).appendTo(location);
+    });
+    $('i').on('click', (e) => {
+      removeData('http://localhost:3000/delete', {
+        id: e.target.parentElement.getAttribute('data-task')
+      })
+      .then(res => {
+        e.target.parentElement.remove();
+        console.log(res.message);
+      });
     });
   });
 });

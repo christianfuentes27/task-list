@@ -58,19 +58,22 @@
     list-style-type: none;
 }
 
+#gallery li,
 #todolist li {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 20px 40px;
+    padding: 20px 30px;
     width: 110px;
     position: relative;
 }
 
+#gallery i,
 #todolist i {
     position: absolute;
     right: 10px;
     bottom: 10px;
+    cursor: pointer;
 }
 
 .container-list {
